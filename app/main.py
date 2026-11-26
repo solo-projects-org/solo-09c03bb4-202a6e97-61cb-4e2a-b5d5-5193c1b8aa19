@@ -37,8 +37,9 @@ app = FastAPI(
     lifespan=lifespan,
     description=(
         "把车型适配明细拆成**备件表**与**工况表**分别存储，不留逐对明细；"
-        "仅当两表能原样拼回录入配对（配对集合为完整矩形）时才入库。"
-        "核定只做 COUNT 聚合，不遍历两表全部配对。"
+        "仅当两表能原样无损拼回录入配对（配对集合为完整矩形）时才入库。"
+        "批量更正只读车型规模与本批涉及成员，通过后只增删状态变化的维表行"
+        "并在同一事务更新规模，不整表重写、不展开在库配对。"
     ),
 )
 
@@ -81,7 +82,7 @@ def load_model(payload: LoadRequest) -> ModelResponse:
     "/api/v1/models/correct",
     response_model=ModelResponse,
     tags=["models"],
-    summary="已入库车型成批更正组合有无（整批核定，通过才一起更新两表）",
+    summary="已入库车型成批更正组合有无（整批核定，通过才增量更新两表与规模）",
     responses={
         404: {"description": "车型不存在"},
         422: {

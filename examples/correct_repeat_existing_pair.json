@@ -1,0 +1,7 @@
+{
+  "modelId": "DEMO-TINY",
+  "plus": [
+    {"partNo": "P-1", "conditionCode": "C-A"}
+  ],
+  "minus": []
+}
